@@ -114,4 +114,4 @@ uv run main_multi.py
 
 ## Visualization
 
-- [CosmoGraph](https://cosmograph.app/)
+- [CosmoGraph](https://cosmograph.app/run/?data=https://raw.githubusercontent.com/hakanotal/hf-dep-network-analysis/refs/heads/main/network_data/edges.csv&meta=https://raw.githubusercontent.com/hakanotal/hf-dep-network-analysis/refs/heads/main/network_data/metadata.csv&source=source&target=target&gravity=0.25&repulsion=1&repulsionTheta=1.15&linkSpring=1&linkDistance=10&friction=0.85&renderLabels=true&renderHoveredLabel=true&renderLinks=true&curvedLinks=true&nodeSizeScale=1&linkWidthScale=2&linkArrowsSizeScale=1&nodeSize=size-total%20links&nodeColor=color-type&linkWidth=width-default&linkColor=color-default&)
