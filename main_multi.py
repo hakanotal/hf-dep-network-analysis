@@ -1,4 +1,4 @@
-from hf_models import (
+from src import (
     analyze_model_list, 
     save_analysis_results,
     build_model_network,
@@ -65,7 +65,7 @@ def main():
         
         # Create the model network
         print("🔗 Building model dependency network...")
-        G = build_model_network(list_result, include_isolated=False)
+        G = build_model_network(list_result, include_isolated=False, propagate_metadata_flag=True)
         
         # Print network summary
         print_network_summary(G)
@@ -73,22 +73,16 @@ def main():
         # Analyze network metrics
         metrics = analyze_network_metrics(G)
         
-        # # Visualize the network (this will save and display the graph)
-        # print(f"\n📊 Creating network visualization...")
-        
-        # visualize_model_network(
-        #     G, 
-        #     output_file="network_data/model_network.png",
-        #     figsize=(16, 12),
-        #     layout="kamada_kawai",
-        #     show_labels=True
-        # )
+        if True:
+            # Visualize the network (this will save and display the graph)
+            print(f"\n📊 Creating network visualization...")
+            visualize_model_network()
         
         # Save network data
         print(f"\n💾 Saving network data...")
 
         # Save network data in CSV format (edges.csv + metadata.csv)
-        export_network_csv(G, "network_data")
+        export_network_csv(G)
         
         # Save network metrics
         with open("network_data/network_metrics.json", "w") as f:

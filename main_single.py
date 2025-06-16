@@ -1,4 +1,4 @@
-from hf_models import (
+from src import (
     analyze_single_model, 
     HfApi
 )
@@ -22,7 +22,7 @@ def main():
     print("-" * 50)
     
     single_result = analyze_single_model(
-        model_name="arcee-ai/Llama-3.1-SuperNova-Lite",
+        model_name="THU-KEG/Llama3-Crab-SFT",
         hf_api=hf_api,
         verbose=True
     )

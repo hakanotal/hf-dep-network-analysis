@@ -12,3 +12,4 @@ wheels/
 .venv
 
 model_data/
+lib/
