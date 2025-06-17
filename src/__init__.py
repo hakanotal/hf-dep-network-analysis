@@ -6,14 +6,16 @@ building dependency networks, and visualizing model connections.
 """
 
 from .analysis import analyze_single_model, analyze_model_list
-from .network import build_model_network
+from .network import (
+    build_model_network,
+    analyze_network_metrics,
+    print_network_summary
+)
 from .visualization import visualize_model_network
 from .data_io import (
     save_analysis_results, 
     export_network_csv, 
-    fetch_missing_models,
-    analyze_network_metrics,
-    print_network_summary
+    fetch_missing_models_from_graph,
 )
 from huggingface_hub import HfApi
 
@@ -27,7 +29,7 @@ __all__ = [
     'visualize_model_network',
     'save_analysis_results',
     'export_network_csv',
-    'fetch_missing_models',
+    'fetch_missing_models_from_graph',
     'analyze_network_metrics', 
     'print_network_summary',
     'HfApi'

@@ -8,7 +8,6 @@ from src import (
     export_network_csv,
     HfApi
 )
-import networkx as nx
 import json
 import os
 
@@ -73,16 +72,16 @@ def main():
         # Analyze network metrics
         metrics = analyze_network_metrics(G)
         
-        if True:
-            # Visualize the network (this will save and display the graph)
-            print(f"\n📊 Creating network visualization...")
-            visualize_model_network()
-        
         # Save network data
         print(f"\n💾 Saving network data...")
 
         # Save network data in CSV format (edges.csv + metadata.csv)
         export_network_csv(G)
+
+        if False:
+            # Visualize the network (this will save and display the graph)
+            print(f"\n📊 Creating network visualization...")
+            visualize_model_network()
         
         # Save network metrics
         with open("network_data/network_metrics.json", "w") as f:

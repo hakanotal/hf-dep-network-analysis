@@ -22,7 +22,7 @@ def main():
     print("-" * 50)
     
     single_result = analyze_single_model(
-        model_name="THU-KEG/Llama3-Crab-SFT",
+        model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
         hf_api=hf_api,
         verbose=True
     )

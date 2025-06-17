@@ -2,103 +2,13 @@
 Network graph building and operations for model dependency analysis.
 """
 
-import networkx as nx
 from typing import Dict, Any, List, Union
-from huggingface_hub import model_info
+import networkx as nx
 
+from .data_io import fetch_missing_models_from_graph
 from .architecture import propagate_metadata
-from .utils import create_minimal_metadata, determine_edge_type
+from .utils import determine_edge_type
 from .constants import UNKNOWN
-
-
-def fetch_missing_models_from_graph(G: nx.DiGraph, metadata_list: List[Dict[str, Any]], verbose: bool = False) -> List[Dict[str, Any]]:
-    """
-    Find models in the graph that are missing from metadata_list and fetch their information.
-    
-    Args:
-        G: NetworkX directed graph
-        metadata_list: List of existing model metadata dictionaries
-        verbose: Whether to print detailed information
-        
-    Returns:
-        List of updated metadata including fetched missing models
-    """
-    
-    # Get all node IDs from graph
-    graph_nodes = set(G.nodes())
-    
-    # Get existing model IDs from metadata
-    existing_models = set(metadata['id'] for metadata in metadata_list)
-    
-    # Find missing models
-    missing_models = graph_nodes - existing_models
-    
-    if verbose:
-        print(f"🔍 Graph contains {len(graph_nodes)} nodes")
-        print(f"📊 Existing metadata covers {len(existing_models)} models")
-        print(f"❓ Found {len(missing_models)} missing models to fetch")
-    
-    if len(missing_models) == 0:
-        if verbose:
-            print("✅ No missing models found!")
-        return metadata_list
-    
-    if verbose:
-        print(f"\n🔍 Missing models to fetch:")
-        for model in list(missing_models)[:5]:  # Show first 5
-            print(f"  - {model}")
-        if len(missing_models) > 5:
-            print(f"  ... and {len(missing_models) - 5} more")
-    
-    # Fetch missing models one by one
-    new_metadata = []
-    successful_fetches = 0
-    failed_fetches = 0
-    
-    for i, model_id in enumerate(missing_models):
-        if verbose:
-            print(f"\n📋 Fetching {i+1}/{len(missing_models)}: {model_id}")
-        
-        try:
-            # Import here to avoid circular imports
-            from .analysis import extract_model_metadata
-            
-            # Fetch model info
-            model = model_info(model_id, files_metadata=False)  # Skip file metadata for speed
-            
-            # Extract metadata
-            metadata = extract_model_metadata(model, verbose=False)
-            new_metadata.append(metadata)
-            successful_fetches += 1
-            
-            if verbose:
-                print(f"  ✅ Successfully fetched: {model_id}")
-                
-        except Exception as e:
-            failed_fetches += 1
-            if verbose:
-                print(f"  ❌ Failed to fetch {model_id}: {str(e)[:100]}")
-            
-            # Create minimal metadata for missing model
-            minimal_metadata = create_minimal_metadata(model_id)
-            new_metadata.append(minimal_metadata)
-            
-            if verbose:
-                print(f"  ⚠️ Created minimal metadata for {model_id}")
-    
-    # Combine existing and new metadata
-    updated_metadata_list = metadata_list + new_metadata
-    
-    if verbose:
-        print(f"\n✅ MISSING MODELS FETCH COMPLETE")
-        print(f"📊 Successfully fetched: {successful_fetches}")
-        print(f"❌ Failed to fetch: {failed_fetches}")
-        print(f"🔢 Total models in metadata: {len(updated_metadata_list)}")
-        
-        if failed_fetches > 0:
-            print(f"💡 Failed models were added with minimal metadata")
-    
-    return updated_metadata_list
 
 
 def build_model_network(analysis_results: Union[Dict[str, Any], List[Dict[str, Any]]], 
@@ -212,8 +122,12 @@ def build_model_network(analysis_results: Union[Dict[str, Any], List[Dict[str, A
             analysis_results['metadata'] = updated_metadata_list
         elif isinstance(analysis_results, list):
             analysis_results[:] = updated_metadata_list  # Update in place
+
+        # Update the graph G with the new metadata
+        return build_model_network(updated_metadata_list, include_isolated=False, propagate_metadata_flag=True, fetch_missing=False)
     
     if propagate_metadata_flag:
+        print(f"\n🔄 PROPAGATING METADATA: {len(metadata_list)}")
         propagate_metadata(G, verbose=False)
     
     return G

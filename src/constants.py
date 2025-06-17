@@ -4,7 +4,7 @@ Constants and configuration values for HuggingFace model analysis.
 
 # Network visualization constants
 DEFAULT_WIDTH = "100%"
-DEFAULT_HEIGHT = "800px"
+DEFAULT_HEIGHT = "1600px"
 NETWORK_BGCOLOR = "#222222"
 FONT_COLOR = "white"
 

@@ -8,6 +8,7 @@ dependencies = [
     "dotenv>=0.9.9",
     "huggingface-hub>=0.32.5",
     "matplotlib>=3.10.3",
+    "netgraph>=4.13.2",
     "networkx>=3.5",
     "numpy>=2.3.0",
     "pandas>=2.3.0",
